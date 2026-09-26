@@ -1,0 +1,6 @@
+(executables
+ (names ec)
+ (modules ec)
+ (libraries core stackmachine)
+ (public_names ec)
+)

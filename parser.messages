@@ -1,0 +1,112 @@
+prog: PLUS
+##
+## Ends in an error in state: 0.
+##
+## prog' -> . prog [ # ]
+##
+## The known suffix of the stack is as follows:
+##
+##
+
+Unexpected operator. I am expecting an expression at this point.
+
+prog: CONST CONST
+##
+## Ends in an error in state: 7.
+##
+## expr -> expr . PLUS expr [ PLUS NEWLINE MUL MINUS EOF ]
+## expr -> expr . MINUS expr [ PLUS NEWLINE MUL MINUS EOF ]
+## expr -> expr . MUL expr [ PLUS NEWLINE MUL MINUS EOF ]
+## separated_nonempty_list(NEWLINE,expr) -> expr . [ EOF ]
+## separated_nonempty_list(NEWLINE,expr) -> expr . NEWLINE separated_nonempty_list(NEWLINE,expr) [ EOF ]
+##
+## The known suffix of the stack is as follows:
+## expr
+##
+
+Unexpected constant. I was expecting one of the following
+- An operator
+- A new line if the current expression is complete.
+
+prog: CONST PLUS PLUS
+##
+## Ends in an error in state: 8.
+##
+## expr -> expr PLUS . expr [ PLUS NEWLINE MUL MINUS EOF ]
+##
+## The known suffix of the stack is as follows:
+## expr PLUS
+##
+
+I was expecting an expression. Did you break the current expression too early?
+
+prog: CONST PLUS CONST CONST
+##
+## Ends in an error in state: 9.
+##
+## expr -> expr . PLUS expr [ PLUS NEWLINE MUL MINUS EOF ]
+## expr -> expr PLUS expr . [ PLUS NEWLINE MUL MINUS EOF ]
+## expr -> expr . MINUS expr [ PLUS NEWLINE MUL MINUS EOF ]
+## expr -> expr . MUL expr [ PLUS NEWLINE MUL MINUS EOF ]
+##
+## The known suffix of the stack is as follows:
+## expr PLUS expr
+##
+
+
+Unexpected constant. I was expecting one of the following
+- An operator
+- A new line if the current expression is complete.
+
+prog: CONST MUL PLUS
+##
+## Ends in an error in state: 10.
+##
+## expr -> expr MUL . expr [ PLUS NEWLINE MUL MINUS EOF ]
+##
+## The known suffix of the stack is as follows:
+## expr MUL
+##
+
+I was expecting a constant. Did you break the expression too early.
+
+prog: CONST NEWLINE PLUS
+##
+## Ends in an error in state: 12.
+##
+## separated_nonempty_list(NEWLINE,expr) -> expr NEWLINE . separated_nonempty_list(NEWLINE,expr) [ EOF ]
+##
+## The known suffix of the stack is as follows:
+## expr NEWLINE
+##
+
+I am expecting an expression at this point.
+
+prog: CONST MINUS PLUS
+##
+## Ends in an error in state: 14.
+##
+## expr -> expr MINUS . expr [ PLUS NEWLINE MUL MINUS EOF ]
+##
+## The known suffix of the stack is as follows:
+## expr MINUS
+##
+
+I am expecting an expression at this point
+
+prog: CONST MINUS CONST CONST
+##
+## Ends in an error in state: 15.
+##
+## expr -> expr . PLUS expr [ PLUS NEWLINE MUL MINUS EOF ]
+## expr -> expr . MINUS expr [ PLUS NEWLINE MUL MINUS EOF ]
+## expr -> expr MINUS expr . [ PLUS NEWLINE MUL MINUS EOF ]
+## expr -> expr . MUL expr [ PLUS NEWLINE MUL MINUS EOF ]
+##
+## The known suffix of the stack is as follows:
+## expr MINUS expr
+##
+
+Unexpected constant. I was expecting one of the following
+- An operator
+- A new line if the current expression is complete.

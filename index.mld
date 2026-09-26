@@ -1,0 +1,26 @@
+{0 Expression to stack machine}
+
+This library exposes the parts of the compiler from {e expression
+language} to an instruction set for a {e stack machine}. The code
+is organised into the following set of modules.
+
+
+- {!Stackmachine.Ast}: The {e abstract syntax tree} for the expression
+  language and relevant functions.
+
+- {!Stackmachine.Machine}: The {e stack machine} instruction set
+  together with facility to {e pretty print} using the
+  {!Stackmachine.Machine.Pretty} module and a simulator given by
+  {!Stackmachine.Machine.Simulator}
+
+- {!Stackmachine.Translate}: This module contains the heart of the
+  compiler which does the translation form expressions to instruction.
+
+
+Besides there are parser ({!Stackmachine.Parser}) and lexer
+{!Stackmachine.Lexer}) modules which are generated from the
+corresponding menhir source file [parser.mly] and ocamllex source file
+[lexer.mll] files.
+
+The actual compiler executable uses this library and is essentially
+just a driver program.

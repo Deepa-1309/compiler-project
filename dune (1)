@@ -1,0 +1,76 @@
+(library
+ (name stackmachine)
+ (public_name stackmachine)
+ (modules ast
+          machine
+          translate
+          parser
+          lexer
+          messages
+ )
+)
+(ocamllex (modules lexer))
+(menhir (modules parser)
+ (flags --exn-carries-state)
+)
+
+(documentation
+  (mld_files index)
+)
+
+
+;;  Error generation files
+;;  ======================
+;
+;; parser.messages : The actual error messages that is built into the
+;;   parser. This should be treated as your source code and should be
+;;   committed to the repository. This is used to build the
+;;   parsing_errors.ml file. All other message files are transient.
+;;
+;; parser_all_errors.message: The messages generated with dummy error messages.
+;;
+;; parser_updated.message:
+;;
+(rule
+ (targets messages.ml)
+ (deps parser.mly parser.messages)
+ (action
+  (with-stdout-to
+   %{targets}
+   (run menhir
+        --explain
+        --strict
+        --unused-tokens
+        parser.mly
+        --compile-errors
+        parser.messages
+        )
+   )
+  )
+ )
+
+(rule
+ (targets parser_all_error.messages)
+ (deps parser.mly)
+ (action
+  (with-stdout-to %{targets}
+   (run menhir  %{dep:parser.mly} --list-errors)
+  )
+ )
+)
+
+(rule
+ (alias errors)
+ (action
+  (run menhir parser.mly --list-errors)
+  ))
+
+(rule
+ (alias new_errors)
+ (deps parser.mly parser_all_error.messages parser.messages)
+ (action
+  (run menhir parser.mly
+       --compare-errors parser_all_error.messages
+       --compare-errors parser.messages
+  ))
+)

@@ -1,0 +1,33 @@
+image: nixos/nix:latest
+
+before_script:
+  - nix-channel --update
+
+build:
+  stage: build
+  script:
+    - nix --extra-experimental-features nix-command --extra-experimental-features flakes develop -c dune build --verbose
+
+  artifacts:
+    paths:
+      - _build/default/_doc/_html/stackmachine/
+      - _build/default/_doc/_html/odoc.support/*.js
+      - _build/default/_doc/_html/odoc.support/*.css
+
+create_pages:
+  image: nixos/nix:latest
+  before_script:
+  - nix-channel --update
+  - nix-env --install --attr
+      nixpkgs.editorconfig-checker
+      nixpkgs.emacs-nox
+      nixpkgs.gnumake
+
+  artifacts:
+    expire_in: 1 day
+
+  script:
+  - nix --extra-experimental-features nix-command --extra-experimental-features flakes develop -c dune build @doc
+  - cp -vr _build/default/_doc/_html public
+  
+  pages: true
